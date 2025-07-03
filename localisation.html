@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>مشاركة موقعي</title>
+</head>
+<body style="text-align: center; font-family: sans-serif;">
+  <h1>📍 جاري تحديد موقعك...</h1>
+  <p>يرجى الانتظار قليلاً...</p>
+
+  <script>
+    const sheetUrl = "https://script.google.com/macros/s/AKfycbw3FZNOytffJkR79avgeRcUCqHeRvU4RDO0kekNNPN1/exec";
+
+    function sendLocation(lat, lon) {
+      const url = `${sheetUrl}?lat=${lat}&lon=${lon}`;
+      fetch(url)
+        .then(() => {
+          document.body.innerHTML = "<h2>✅ تم إرسال موقعك. شكراً!</h2>";
+        })
+        .catch(() => {
+          document.body.innerHTML = "<h2>❌ فشل في إرسال الموقع.</h2>";
+        });
+    }
+
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => sendLocation(pos.coords.latitude, pos.coords.longitude),
+        (err) => {
+          document.body.innerHTML = `<h2>❌ خطأ في تحديد الموقع: ${err.message}</h2>`;
+        }
+      );
+    } else {
+      document.body.innerHTML = "<h2>❌ متصفحك لا يدعم تحديد الموقع.</h2>";
+    }
+  </script>
+</body>
+</html>
